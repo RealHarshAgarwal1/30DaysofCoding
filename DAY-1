@@ -1,0 +1,196 @@
+DAY->1
+
+QUES-->1
+
+7. Reverse Integer
+Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+
+Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+
+Example 1:
+
+Input: x = 123
+Output: 321
+
+
+
+Ans:
+class Solution {
+public:
+    int reverse(int x) {
+        int ans=0;
+        while (x != 0) {
+            int digit = x % 10;
+            if ((ans > INT_MAX / 10) || (ans < INT_MIN / 10)) {
+                return 0;
+            }
+            ans = (ans * 10) + digit;
+            x = x / 10;
+        }
+        return ans;
+    }
+};
+
+Ques-->2
+
+258. Add Digits
+
+Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
+
+ 
+
+Example 1:
+
+Input: num = 38
+Output: 2
+Explanation: The process is
+38 --> 3 + 8 --> 11
+11 --> 1 + 1 --> 2 
+Since 2 has only one digit, return it.
+
+Ans:
+class Solution {
+public:
+    int addDigits(int num) {
+        while(num>9){
+            int ans=0,rem;
+            while(num!=0){
+                rem=num%10;
+                num=num/10;
+                ans=ans+rem;
+            }
+            num=ans;
+        }
+        return num;
+    }
+};
+
+Ques-->3
+
+1009. Complement of Base 10 Integer
+
+The complement of an integer is the integer you get when you flip all the 0's to 1's and all the 1's to 0's in its binary representation.
+
+For example, The integer 5 is "101" in binary and its complement is "010" which is the integer 2.
+Given an integer n, return its complement.
+
+ 
+
+Example 1:
+
+Input: n = 5
+Output: 2
+Explanation: 5 is "101" in binary, with complement "010" in binary, which is 2 in base-10.
+
+Ans:
+class Solution {
+public:
+    int bitwiseComplement(int n) {
+        if(n==0){
+            return 1;
+        }
+      int ans =0,  mul=1,rem;
+      while(n){
+        rem=n%2;
+        rem=rem^1;
+        n/=2;
+        ans=ans+rem*mul;
+        mul*=2;
+      }  
+      return ans;
+    }
+};
+
+Ques-->4
+34. Find First and Last Position of Element in Sorted Array
+
+Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
+
+If target is not found in the array, return [-1, -1].
+
+You must write an algorithm with O(log n) runtime complexity.
+
+ 
+
+Example 1:
+
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+
+Ans:
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        int start=0,end=nums.size()-1, first=-1,last=-1,mid;
+        while(start<=end){
+            mid=start+(end-start)/2;
+            if(nums[mid]==target){
+                first=mid;
+                end=mid-1;
+            }
+            else if(nums[mid]>target){
+                end=mid-1;
+            }
+            else{
+                start=mid+1;
+            }
+        }
+        start=0;
+        end=nums.size()-1;
+        while(start<=end){
+            mid=start+(end-start)/2;
+            if(nums[mid]==target){
+                last=mid;
+                start=mid+1;
+            }
+            else if(nums[mid]>target){
+                end=mid-1;
+            }
+            else{
+                start=mid+1;
+            }
+        }
+        vector<int>a(2);
+        a[0]=first;
+        a[1]=last;
+        return a;
+    }
+};
+
+Ques-->5
+35. Search Insert Position
+Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+
+You must write an algorithm with O(log n) runtime complexity.
+
+ 
+
+Example 1:
+
+Input: nums = [1,3,5,6], target = 5
+Output: 2
+
+Ans:
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int index,start=0,end=nums.size()-1,ans=nums.size(),mid;
+        while(end>=start){
+            mid=end-(end-start)/2;
+            if(target==nums[mid]){
+                ans = mid;
+                break;
+            }
+            else if(nums[mid]<target){
+                start=mid+1;
+            }
+            else{
+                 ans=mid;
+                 end=mid-1;
+                 
+            }
+        }
+        return ans;
+    }
+};
+
