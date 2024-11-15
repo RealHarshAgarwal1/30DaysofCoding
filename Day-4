@@ -1,0 +1,197 @@
+Ques-->1:
+121. Best Time to Buy and Sell Stock
+Easy
+Topics
+Companies
+You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+
+ 
+
+Example 1:
+
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
+
+Ans:
+
+class Solution {
+ public:
+  int maxProfit(vector<int>& prices) {
+    int sellOne = 0;
+    int holdOne = INT_MIN;
+
+    for (const int price : prices) {
+      sellOne = max(sellOne, holdOne + price);
+      holdOne = max(holdOne, -price);
+    }
+
+    return sellOne;
+  }
+};
+
+
+Ques-->2:
+
+169. Majority Element
+Easy
+Topics
+Companies
+Given an array nums of size n, return the majority element.
+
+The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+ 
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: 3
+
+Ans:
+class Solution {
+ public:
+  int majorityElement(vector<int>& nums) {
+    int ans;
+    int count = 0;
+
+    for (const int num : nums) {
+      if (count == 0)
+        ans = num;
+      count += num == ans ? 1 : -1;
+    }
+
+    return ans;
+  }
+};
+
+Ques-->3:
+229. Majority Element II
+Medium
+Topics
+Companies
+Hint
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
+
+ 
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: [3]
+
+Ans:
+
+class Solution {
+ public:
+  vector<int> majorityElement(vector<int>& nums) {
+    vector<int> ans;
+    int candidate1 = 0;
+    int candidate2 = 1;   // any number different from candidate1
+    int countSoFar1 = 0;  // the number of candidate1 so far
+    int countSoFar2 = 0;  // the number of candidate2 so far
+
+    for (const int num : nums)
+      if (num == candidate1) {
+        ++countSoFar1;
+      } else if (num == candidate2) {
+        ++countSoFar2;
+      } else if (countSoFar1 == 0) {  // Assign the new candidate.
+        candidate1 = num;
+        ++countSoFar1;
+      } else if (countSoFar2 == 0) {  // Assign the new candidate.
+        candidate2 = num;
+        ++countSoFar2;
+      } else {  // Meet a new number, so pair with the previous counts.
+        --countSoFar1;
+        --countSoFar2;
+      }
+
+    const int count1 = ranges::count(nums, candidate1);
+    const int count2 = ranges::count(nums, candidate2);
+
+    if (count1 > nums.size() / 3)
+      ans.push_back(candidate1);
+    if (count2 > nums.size() / 3)
+      ans.push_back(candidate2);
+    return ans;
+  }
+};
+
+Ques-->4:
+62. Unique Paths
+Medium
+Topics
+Companies
+There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The test cases are generated so that the answer will be less than or equal to 2 * 109.
+
+ 
+
+Example 1:
+
+
+Input: m = 3, n = 7
+Output: 28
+
+Ans:
+class Solution {
+ public:
+  int uniquePaths(int m, int n) {
+    // dp[i][j] := the number of unique paths from (0, 0) to (i, j)
+    vector<vector<int>> dp(m, vector<int>(n, 1));
+
+    for (int i = 1; i < m; ++i)
+      for (int j = 1; j < n; ++j)
+        dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+
+    return dp[m - 1][n - 1];
+  }
+};
+
+Ques-->5:
+128. Longest Consecutive Sequence
+Medium
+Topics
+Companies
+Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+
+You must write an algorithm that runs in O(n) time.
+
+ 
+
+Example 1:
+
+Input: nums = [100,4,200,1,3,2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+Ans:
+
+class Solution {
+ public:
+  int longestConsecutive(vector<int>& nums) {
+    int ans = 0;
+    unordered_set<int> seen{nums.begin(), nums.end()};
+
+    for (int num : nums) {
+      // `num` is the start of a sequence.
+      if (seen.contains(num - 1))
+        continue;
+      int length = 1;
+      while (seen.contains(++num))
+        ++length;
+      ans = max(ans, length);
+    }
+
+    return ans;
+  }
+};
