@@ -1,0 +1,255 @@
+Day-7:
+
+Ques-->1:
+234. Palindrome Linked List
+Easy
+Topics
+Companies
+Given the head of a singly linked list, return true if it is a 
+palindrome
+ or false otherwise.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,2,1]
+Output: true
+
+Ans:
+class Solution {
+ public:
+  bool isPalindrome(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+
+    while (fast != nullptr && fast->next != nullptr) {
+      slow = slow->next;
+      fast = fast->next->next;
+    }
+
+    if (fast != nullptr)
+      slow = slow->next;
+    slow = reverseList(slow);
+
+    while (slow != nullptr) {
+      if (slow->val != head->val)
+        return false;
+      slow = slow->next;
+      head = head->next;
+    }
+
+    return true;
+  }
+
+ private:
+  ListNode* reverseList(ListNode* head) {
+    ListNode* prev = nullptr;
+    while (head != nullptr) {
+      ListNode* next = head->next;
+      head->next = prev;
+      prev = head;
+      head = next;
+    }
+    return prev;
+  }
+};
+
+Ques-->2:
+
+142. Linked List Cycle II
+Medium
+Topics
+Companies
+Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to (0-indexed). It is -1 if there is no cycle. Note that pos is not passed as a parameter.
+
+Do not modify the linked list.
+
+ 
+
+Example 1:
+
+
+Input: head = [3,2,0,-4], pos = 1
+Output: tail connects to node index 1
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+
+Ans:
+class Solution {
+ public:
+  ListNode* detectCycle(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+
+    while (fast != nullptr && fast->next != nullptr) {
+      slow = slow->next;
+      fast = fast->next->next;
+      if (slow == fast) {
+        slow = head;
+        while (slow != fast) {
+          slow = slow->next;
+          fast = fast->next;
+        }
+        return slow;
+      }
+    }
+
+    return nullptr;
+  }
+};
+
+Ques-->3:
+
+61. Rotate List
+Medium
+Topics
+Companies
+Given the head of a linked list, rotate the list to the right by k places.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,3,4,5], k = 2
+Output: [4,5,1,2,3]
+
+Ans:
+
+class Solution {
+ public:
+  ListNode* rotateRight(ListNode* head, int k) {
+    if (!head || !head->next || k == 0)
+      return head;
+
+    ListNode* tail;
+    int length = 1;
+    for (tail = head; tail->next; tail = tail->next)
+      ++length;
+    tail->next = head;  // Circle the list.
+
+    const int t = length - k % length;
+    for (int i = 0; i < t; ++i)
+      tail = tail->next;
+    ListNode* newHead = tail->next;
+    tail->next = nullptr;
+
+    return newHead;
+  }
+};
+
+Ques-->4:
+
+138. Copy List with Random Pointer
+Medium
+Topics
+Companies
+Hint
+A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null.
+
+Construct a deep copy of the list. The deep copy should consist of exactly n brand new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.
+
+For example, if there are two nodes X and Y in the original list, where X.random --> Y, then for the corresponding two nodes x and y in the copied list, x.random --> y.
+
+Return the head of the copied linked list.
+
+The linked list is represented in the input/output as a list of n nodes. Each node is represented as a pair of [val, random_index] where:
+
+val: an integer representing Node.val
+random_index: the index of the node (range from 0 to n-1) that the random pointer points to, or null if it does not point to any node.
+Your code will only be given the head of the original linked list.
+
+ 
+
+Example 1:
+
+
+Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+Output: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+
+
+Ans:
+
+class Solution {
+ public:
+  Node* copyRandomList(Node* head) {
+    if (head == nullptr)
+      return nullptr;
+    if (const auto it = map.find(head); it != map.cend())
+      return it->second;
+
+    Node* newNode = new Node(head->val);
+    map[head] = newNode;
+    newNode->next = copyRandomList(head->next);
+    newNode->random = copyRandomList(head->random);
+    return newNode;
+  }
+
+ private:
+  unordered_map<Node*, Node*> map;
+};
+
+Ques-->5:
+
+15. 3Sum
+Medium
+Topics
+Companies
+Hint
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+
+Notice that the solution set must not contain duplicate triplets.
+
+ 
+
+Example 1:
+
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+Explanation: 
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+The distinct triplets are [-1,0,1] and [-1,-1,2].
+Notice that the order of the output and the order of the triplets does not matter.
+
+Ans:
+class Solution {
+ public:
+  vector<vector<int>> threeSum(vector<int>& nums) {
+    if (nums.size() < 3)
+      return {};
+
+    vector<vector<int>> ans;
+
+    ranges::sort(nums);
+
+    for (int i = 0; i + 2 < nums.size(); ++i) {
+      if (i > 0 && nums[i] == nums[i - 1])
+        continue;
+      // Choose nums[i] as the first number in the triplet, then search the
+      // remaining numbers in [i + 1, n - 1].
+      int l = i + 1;
+      int r = nums.size() - 1;
+      while (l < r) {
+        const int sum = nums[i] + nums[l] + nums[r];
+        if (sum == 0) {
+          ans.push_back({nums[i], nums[l++], nums[r--]});
+          while (l < r && nums[l] == nums[l - 1])
+            ++l;
+          while (l < r && nums[r] == nums[r + 1])
+            --r;
+        } else if (sum < 0) {
+          ++l;
+        } else {
+          --r;
+        }
+      }
+    }
+
+    return ans;
+  }
+};
