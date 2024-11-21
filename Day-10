@@ -1,0 +1,262 @@
+Day-10
+
+Ques-->1:
+
+51. N-Queens
+Hard
+Topics
+Companies
+The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.
+
+Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space, respectively.
+
+ 
+
+Example 1:
+
+
+Input: n = 4
+Output: [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above
+
+Ans:
+
+class Solution {
+ public:
+  vector<vector<string>> solveNQueens(int n) {
+    vector<vector<string>> ans;
+    dfs(n, 0, vector<bool>(n), vector<bool>(2 * n - 1), vector<bool>(2 * n - 1),
+        vector<string>(n, string(n, '.')), ans);
+    return ans;
+  }
+
+ private:
+  void dfs(int n, int i, vector<bool>&& cols, vector<bool>&& diag1,
+           vector<bool>&& diag2, vector<string>&& board,
+           vector<vector<string>>& ans) {
+    if (i == n) {
+      ans.push_back(board);
+      return;
+    }
+
+    for (int j = 0; j < n; ++j) {
+      if (cols[j] || diag1[i + j] || diag2[j - i + n - 1])
+        continue;
+      board[i][j] = 'Q';
+      cols[j] = diag1[i + j] = diag2[j - i + n - 1] = true;
+      dfs(n, i + 1, std::move(cols), std::move(diag1), std::move(diag2),
+          std::move(board), ans);
+      cols[j] = diag1[i + j] = diag2[j - i + n - 1] = false;
+      board[i][j] = '.';
+    }
+  }
+};
+
+
+Ques-->2:
+
+37. Sudoku Solver
+Hard
+Topics
+Companies
+Write a program to solve a Sudoku puzzle by filling the empty cells.
+
+A sudoku solution must satisfy all of the following rules:
+
+Each of the digits 1-9 must occur exactly once in each row.
+Each of the digits 1-9 must occur exactly once in each column.
+Each of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+The '.' character indicates empty cells.
+
+ 
+
+Example 1:
+
+
+Input: board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]
+Output: [["5","3","4","6","7","8","9","1","2"],["6","7","2","1","9","5","3","4","8"],["1","9","8","3","4","2","5","6","7"],["8","5","9","7","6","1","4","2","3"],["4","2","6","8","5","3","7","9","1"],["7","1","3","9","2","4","8","5","6"],["9","6","1","5","3","7","2","8","4"],["2","8","7","4","1","9","6","3","5"],["3","4","5","2","8","6","1","7","9"]]
+Explanation: The input board is shown above and the only valid solution is shown below:
+
+Ans:
+
+class Solution {
+ public:
+  void solveSudoku(vector<vector<char>>& board) {
+    solve(board, 0);
+  }
+
+ private:
+  bool solve(vector<vector<char>>& board, int s) {
+    if (s == 81)
+      return true;
+
+    const int i = s / 9;
+    const int j = s % 9;
+
+    if (board[i][j] != '.')
+      return solve(board, s + 1);
+
+    for (char c = '1'; c <= '9'; ++c)
+      if (isValid(board, i, j, c)) {
+        board[i][j] = c;
+        if (solve(board, s + 1))
+          return true;
+        board[i][j] = '.';
+      }
+
+    return false;
+  }
+
+  bool isValid(vector<vector<char>>& board, int row, int col, char c) {
+    for (int i = 0; i < 9; ++i)
+      if (board[i][col] == c || board[row][i] == c ||
+          board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == c)
+        return false;
+    return true;
+  }
+};
+
+Ques-->3:
+
+540. Single Element in a Sorted Array
+Medium
+Topics
+Companies
+You are given a sorted array consisting of only integers where every element appears exactly twice, except for one element which appears exactly once.
+
+Return the single element that appears only once.
+
+Your solution must run in O(log n) time and O(1) space.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,2,3,3,4,4,8,8]
+Output: 2
+
+Ans:
+
+class Solution {
+ public:
+  int singleNonDuplicate(vector<int>& nums) {
+    int l = 0;
+    int r = nums.size() - 1;
+
+    while (l < r) {
+      int m = (l + r) / 2;
+      if (m % 2 == 1)
+        --m;
+      if (nums[m] == nums[m + 1])
+        l = m + 2;
+      else
+        r = m;
+    }
+
+    return nums[l];
+  }
+};
+
+Ques-->4:
+
+33. Search in Rotated Sorted Array
+Medium
+Topics
+Companies
+There is an integer array nums sorted in ascending order (with distinct values).
+
+Prior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length) such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed). For example, [0,1,2,4,5,6,7] might be rotated at pivot index 3 and become [4,5,6,7,0,1,2].
+
+Given the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.
+
+You must write an algorithm with O(log n) runtime complexity.
+
+ 
+
+Example 1:
+
+Input: nums = [4,5,6,7,0,1,2], target = 0
+Output: 4
+
+Ans::
+
+class Solution {
+ public:
+  int search(vector<int>& nums, int target) {
+    int l = 0;
+    int r = nums.size() - 1;
+
+    while (l <= r) {
+      const int m = (l + r) / 2;
+      if (nums[m] == target)
+        return m;
+      if (nums[l] <= nums[m]) {  // nums[l..m] are sorted.
+        if (nums[l] <= target && target < nums[m])
+          r = m - 1;
+        else
+          l = m + 1;
+      } else {  // nums[m..n - 1] are sorted.
+        if (nums[m] < target && target <= nums[r])
+          l = m + 1;
+        else
+          r = m - 1;
+      }
+    }
+
+    return -1;
+  }
+};
+
+Ques-->5:
+
+4. Median of Two Sorted Arrays
+Hard
+Topics
+Companies
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+The overall run time complexity should be O(log (m+n)).
+
+ 
+
+Example 1:
+
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+Explanation: merged array = [1,2,3] and median is 2.
+
+Ans::
+
+class Solution {
+ public:
+  double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    const int n1 = nums1.size();
+    const int n2 = nums2.size();
+    if (n1 > n2)
+      return findMedianSortedArrays(nums2, nums1);
+
+    int l = 0;
+    int r = n1;
+
+    while (l <= r) {
+      const int partition1 = (l + r) / 2;
+      const int partition2 = (n1 + n2 + 1) / 2 - partition1;
+      const int maxLeft1 = partition1 == 0 ? INT_MIN : nums1[partition1 - 1];
+      const int maxLeft2 = partition2 == 0 ? INT_MIN : nums2[partition2 - 1];
+      const int minRight1 = partition1 == n1 ? INT_MAX : nums1[partition1];
+      const int minRight2 = partition2 == n2 ? INT_MAX : nums2[partition2];
+      if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1)
+        return (n1 + n2) % 2 == 0
+                   ? (max(maxLeft1, maxLeft2) + min(minRight1, minRight2)) * 0.5
+                   : max(maxLeft1, maxLeft2);
+      else if (maxLeft1 > minRight2)
+        r = partition1 - 1;
+      else
+        l = partition1 + 1;
+    }
+
+    throw;
+  }
+};
