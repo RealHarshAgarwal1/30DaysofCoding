@@ -1,0 +1,206 @@
+Day-12
+
+Ques-->1:
+
+686. Repeated String Match
+Medium
+Topics
+Companies
+Given two strings a and b, return the minimum number of times you should repeat string a so that string b is a substring of it. If it is impossible for b​​​​​​ to be a substring of a after repeating it, return -1.
+
+Notice: string "abc" repeated 0 times is "", repeated 1 time is "abc" and repeated 2 times is "abcabc".
+
+ 
+
+Example 1:
+
+Input: a = "abcd", b = "cdabcdab"
+Output: 3
+Explanation: We return 3 because by repeating a three times "abcdabcdabcd", b is a substring of it.
+
+Ans:
+
+class Solution {
+ public:
+  int repeatedStringMatch(string a, string b) {
+    const int n = ceil((double)b.length() / a.length());
+    string s;
+
+    for (int i = 0; i < n; ++i)
+      s += a;
+
+    if (s.find(b) != string::npos)
+      return n;
+    if ((s + a).find(b) != string::npos)
+      return n + 1;
+    return -1;
+  }
+};
+
+Ques-->2:
+
+242. Valid Anagram
+Easy
+Topics
+Companies
+Given two strings s and t, return true if t is an 
+anagram
+ of s, and false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "anagram", t = "nagaram"
+
+Output: true
+
+Ans::
+
+class Solution {
+ public:
+  bool isAnagram(string s, string t) {
+    if (s.length() != t.length())
+      return false;
+
+    vector<int> count(26);
+
+    for (const char c : s)
+      ++count[c - 'a'];
+
+    for (const char c : t) {
+      if (count[c - 'a'] == 0)
+        return false;
+      --count[c - 'a'];
+    }
+
+    return true;
+  }
+};
+
+Ques-->3:
+
+28. Find the Index of the First Occurrence in a String
+Easy
+Topics
+Companies
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+
+ 
+
+Example 1:
+
+Input: haystack = "sadbutsad", needle = "sad"
+Output: 0
+Explanation: "sad" occurs at index 0 and 6.
+The first occurrence is at index 0, so we return 0.
+
+
+Ans::
+class Solution {
+ public:
+  int strStr(string haystack, string needle) {
+    const int m = haystack.length();
+    const int n = needle.length();
+
+    for (int i = 0; i < m - n + 1; i++)
+      if (haystack.substr(i, n) == needle)
+        return i;
+
+    return -1;
+  }
+};
+
+Ques-->4:
+
+165. Compare Version Numbers
+Medium
+Topics
+Companies
+Hint
+Given two version strings, version1 and version2, compare them. A version string consists of revisions separated by dots '.'. The value of the revision is its integer conversion ignoring leading zeros.
+
+To compare version strings, compare their revision values in left-to-right order. If one of the version strings has fewer revisions, treat the missing revision values as 0.
+
+Return the following:
+
+If version1 < version2, return -1.
+If version1 > version2, return 1.
+Otherwise, return 0.
+ 
+
+Example 1:
+
+Input: version1 = "1.2", version2 = "1.10"
+
+Output: -1
+
+Explanation:
+
+version1's second revision is "2" and version2's second revision is "10": 2 < 10, so version1 < version2.
+
+Ans:
+
+class Solution {
+ public:
+  int compareVersion(string version1, string version2) {
+    istringstream iss1(version1);
+    istringstream iss2(version2);
+    int v1;
+    int v2;
+    char dotChar;
+
+    while (bool(iss1 >> v1) + bool(iss2 >> v2)) {
+      if (v1 < v2)
+        return -1;
+      if (v1 > v2)
+        return 1;
+      iss1 >> dotChar;
+      iss2 >> dotChar;
+      v1 = 0;
+      v2 = 0;
+    }
+
+    return 0;
+  };
+};
+
+Ques-->5:
+
+94. Binary Tree Inorder Traversal
+Easy
+Topics
+Companies
+Given the root of a binary tree, return the inorder traversal of its nodes' values.
+
+ 
+
+Example 1:
+
+Input: root = [1,null,2,3]
+
+Output: [1,3,2]
+
+Explanation:
+
+Ans::
+
+class Solution {
+ public:
+  vector<int> inorderTraversal(TreeNode* root) {
+    vector<int> ans;
+    stack<TreeNode*> stack;
+
+    while (root != nullptr || !stack.empty()) {
+      while (root != nullptr) {
+        stack.push(root);
+        root = root->left;
+      }
+      root = stack.top(), stack.pop();
+      ans.push_back(root->val);
+      root = root->right;
+    }
+
+    return ans;
+  }
+};
