@@ -1,0 +1,128 @@
+Day-16
+
+Ques-->1:
+
+152. Maximum Product Subarray
+Medium
+Topics
+Companies
+Given an integer array nums, find a 
+subarray
+ that has the largest product, and return the product.
+
+The test cases are generated so that the answer will fit in a 32-bit integer.
+
+ 
+
+Example 1:
+
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+
+Ans::
+
+class Solution {
+ public:
+  int maxProduct(vector<int>& nums) {
+    int ans = nums[0];
+    int dpMin = nums[0];  // the minimum so far
+    int dpMax = nums[0];  // the maximum so far
+
+    for (int i = 1; i < nums.size(); ++i) {
+      const int num = nums[i];
+      const int prevMin = dpMin;  // dpMin[i - 1]
+      const int prevMax = dpMax;  // dpMax[i - 1]
+      if (num < 0) {
+        dpMin = min(prevMax * num, num);
+        dpMax = max(prevMin * num, num);
+      } else {
+        dpMin = min(prevMin * num, num);
+        dpMax = max(prevMax * num, num);
+      }
+      ans = max(ans, dpMax);
+    }
+
+    return ans;
+  }
+};
+
+Ques-->2:
+
+300. Longest Increasing Subsequence
+Medium
+Topics
+Companies
+Given an integer array nums, return the length of the longest strictly increasing 
+subsequence
+.
+
+ 
+
+Example 1:
+
+Input: nums = [10,9,2,5,3,7,101,18]
+Output: 4
+Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+
+Ans::
+
+class Solution {
+ public:
+  int lengthOfLIS(vector<int>& nums) {
+    if (nums.empty())
+      return 0;
+
+    // dp[i] := the length of LIS ending in nums[i]
+    vector<int> dp(nums.size(), 1);
+
+    for (int i = 1; i < nums.size(); ++i)
+      for (int j = 0; j < i; ++j)
+        if (nums[j] < nums[i])
+          dp[i] = max(dp[i], dp[j] + 1);
+
+    return ranges::max(dp);
+  }
+};
+
+Ques-->3:
+
+1143. Longest Common Subsequence
+Medium
+Topics
+Companies
+Hint
+Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0.
+
+A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+
+For example, "ace" is a subsequence of "abcde".
+A common subsequence of two strings is a subsequence that is common to both strings.
+
+ 
+
+Example 1:
+
+Input: text1 = "abcde", text2 = "ace" 
+Output: 3  
+Explanation: The longest common subsequence is "ace" and its length is 3.
+
+Ans::
+
+class Solution {
+ public:
+  int longestCommonSubsequence(string text1, string text2) {
+    const int m = text1.length();
+    const int n = text2.length();
+    // dp[i][j] := the length of LCS(text1[0..i), text2[0..j))
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+
+    for (int i = 0; i < m; ++i)
+      for (int j = 0; j < n; ++j)
+        dp[i + 1][j + 1] = text1[i] == text2[j]
+                               ? 1 + dp[i][j]
+                               : max(dp[i][j + 1], dp[i + 1][j]);
+
+    return dp[m][n];
+  }
+};
