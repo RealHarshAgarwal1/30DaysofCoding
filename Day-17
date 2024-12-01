@@ -1,0 +1,137 @@
+Ques-->1:
+
+24. Swap Nodes in Pairs
+Medium
+Topics
+Companies
+Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list's nodes (i.e., only nodes themselves may be changed.)
+
+ 
+
+Example 1:
+
+Input: head = [1,2,3,4]
+
+Output: [2,1,4,3]
+
+Explanation:
+
+Ans::
+
+class Solution {
+ public:
+  ListNode* swapPairs(ListNode* head) {
+    const int length = getLength(head);
+    ListNode dummy(0, head);
+    ListNode* prev = &dummy;
+    ListNode* curr = head;
+
+    for (int i = 0; i < length / 2; ++i) {
+      ListNode* next = curr->next;
+      curr->next = next->next;
+      next->next = prev->next;
+      prev->next = next;
+      prev = curr;
+      curr = curr->next;
+    }
+
+    return dummy.next;
+  }
+
+ private:
+  int getLength(ListNode* head) {
+    int length = 0;
+    for (ListNode* curr = head; curr; curr = curr->next)
+      ++length;
+    return length;
+  }
+};
+
+Ques-->2:
+
+75. Sort Colors
+Medium
+Topics
+Companies
+Hint
+Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+
+We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
+
+You must solve this problem without using the library's sort function.
+
+ 
+
+Example 1:
+
+Input: nums = [2,0,2,1,1,0]
+Output: [0,0,1,1,2,2]
+
+Ans::
+
+class Solution {
+ public:
+  void sortColors(vector<int>& nums) {
+    int zero = -1;
+    int one = -1;
+    int two = -1;
+
+    for (const int num : nums)
+      if (num == 0) {
+        nums[++two] = 2;
+        nums[++one] = 1;
+        nums[++zero] = 0;
+      } else if (num == 1) {
+        nums[++two] = 2;
+        nums[++one] = 1;
+      } else {
+        nums[++two] = 2;
+      }
+  }
+};
+
+Ques-->3:
+
+49. Group Anagrams
+Medium
+Topics
+Companies
+Given an array of strings strs, group the 
+anagrams
+ together. You can return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+Explanation:
+
+There is no string in strs that can be rearranged to form "bat".
+The strings "nat" and "tan" are anagrams as they can be rearranged to form each other.
+The strings "ate", "eat", and "tea" are anagrams as they can be rearranged to form each other.
+
+
+Ans::
+
+class Solution {
+ public:
+  vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    vector<vector<string>> ans;
+    unordered_map<string, vector<string>> keyToAnagrams;
+
+    for (const string& str : strs) {
+      string key = str;
+      ranges::sort(key);
+      keyToAnagrams[key].push_back(str);
+    }
+
+    for (const auto& [_, anagrams] : keyToAnagrams)
+      ans.push_back(anagrams);
+
+    return ans;
+  }
+};
